@@ -1,0 +1,6 @@
+{
+	"projects": [
+		"cirrus.runner",
+		"cirrus.runner.tests"
+	]
+}
