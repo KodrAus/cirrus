@@ -17,6 +17,9 @@ namespace Cirrus.Core.Workflow.Tests
 
 			Console.WriteLine("Testing...");
 
+			runner.Run(() => Assert.ICommandInput_Takes_Generic_Argument());
+			runner.Run(() => Assert.ICommandOutput_Takes_Generic_Argument());
+
 			runner.Run(() => Assert.Workflow_Takes_Generic_Command_Args());
 			runner.Run(() => Assert.Workflow_Returns_Unravelled_Workflow_As_Result());
 
@@ -27,22 +30,36 @@ namespace Cirrus.Core.Workflow.Tests
 	//Tests
 	static class Assert
 	{
+		public static bool ICommandInput_Takes_Generic_Argument()
+		{
+			throw new NotImplementedException();
+		}
+
+		public static bool ICommandOutput_Takes_Generic_Argument()
+		{
+			throw new NotImplementedException();
+		}
+
 		public static bool Workflow_Takes_Generic_Command_Args()
 		{
 			string input = "my input";
-			var workflow = new WorkflowContainer<TestCommandInput1, TestCommandOutput1>(new TestCommandInput1 { InArg = input });
+			var workflow = new WorkflowContainer<TestCommandInput1, TestCommandOutput1>(new TestCommandInput1(input));
 			
 			var result = workflow.Execute(new TestCommand1()).Result;
 
-			return result.OutArg2 == input;
+			return result.Result == input;
 		}
 
 		public static bool Workflow_Returns_Unravelled_Workflow_As_Result()
 		{
-			var workflow = new WorkflowContainer<TestCommandInput1, TestCommandOutput1, 
-												 TestCommandInput2, TestCommandOutput2>(
-												 new TestCommandInput1 { InArg = "my input" },
-												 (out1) => new TestCommandInput2 { InArg = out1.OutArg1 });
+			var workflow = new WorkflowContainer<
+				TestCommandInput1, TestCommandOutput1, 
+				TestCommandInput2, TestCommandOutput2>
+			(
+				new TestCommandInput1("my input"),
+				
+				(out1) => new TestCommandInput2(out1.Result)
+			);
 
 		    var result = workflow.Execute(new TestCommand1()).Result;
 

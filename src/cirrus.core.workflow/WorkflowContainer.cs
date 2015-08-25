@@ -3,7 +3,9 @@ using System.Threading.Tasks;
 
 namespace Cirrus.Core.Workflow
 {
-	public class WorkflowContainer<TIn, TOut>
+	public class WorkflowContainer<TIn, TOut> : IWorkflowContainer
+		where TIn : class, ICommandInput
+		where TOut : class, ICommandOutput
 	{
 		public WorkflowContainer(TIn arg)
 		{
@@ -18,7 +20,11 @@ namespace Cirrus.Core.Workflow
 		}
 	}
 
-	public class WorkflowContainer<TIn1, TOut1, TIn2, TOut2>
+	public class WorkflowContainer<TIn1, TOut1, TIn2, TOut2> : IWorkflowContainer
+		where TIn1 : class, ICommandInput
+		where TOut1 : class, ICommandOutput
+		where TIn2 : class, ICommandInput
+		where TOut2 : class, ICommandOutput
 	{
 		public WorkflowContainer(TIn1 arg, Func<TOut1, TIn2> thread1)
 		{
@@ -38,7 +44,13 @@ namespace Cirrus.Core.Workflow
 		}
 	}
 
-	public class WorkflowContainer<TIn1, TOut1, TIn2, TOut2, TIn3, TOut3>
+	public class WorkflowContainer<TIn1, TOut1, TIn2, TOut2, TIn3, TOut3> : IWorkflowContainer
+		where TIn1 : class, ICommandInput
+		where TOut1 : class, ICommandOutput
+		where TIn2 : class, ICommandInput
+		where TOut2 : class, ICommandOutput
+		where TIn3 : class, ICommandInput
+		where TOut3 : class, ICommandOutput
 	{
 		public WorkflowContainer(TIn1 arg, Func<TOut1, TIn2> thread1, Func<TOut2, TIn3> thread2)
 		{
