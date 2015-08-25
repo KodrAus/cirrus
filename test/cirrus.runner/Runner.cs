@@ -26,6 +26,12 @@ namespace Cirrus.Test
 				Console.WriteLine(consolePrefix + " FAILED: " + e.Message);
 				Console.WriteLine(consolePrefix + e.StackTrace);
 			}
+			finally
+			{
+				Console.WriteLine();
+				Console.WriteLine("-----");
+				Console.WriteLine();
+			}
 		}
 	}
 }

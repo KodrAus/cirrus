@@ -1,6 +1,5 @@
 {
-	"projects": [
-		"cirrus.runner",
-		"cirrus.runner.tests"
+	"sources": [
+		"../src"
 	]
 }

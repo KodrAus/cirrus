@@ -1,0 +1,13 @@
+{
+	"sources": [
+		"src",
+		"test"
+	],
+	"projects": [
+		"cirrus.core.workflow",
+		"cirrus.core.workflow.tests",
+		
+		"cirrus.runner",
+		"cirrus.runner.tests"
+	]
+}
