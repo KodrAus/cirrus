@@ -25,7 +25,13 @@ namespace Cirrus.Core.Process.Tests
 			runner.Run(() => Assert.Process_Returns_Unravelled_Process_As_Result());
 			runner.Run(() => Assert.Process_Can_Execute_Another_Process_As_A_Step());
 			runner.Run(() => Assert.Process_Can_Execute_As_IProcessStep());
+			runner.Run(() => Assert.Process_Throws_NullReferenceException_If_Step_Is_Not_Supplied_When_Running_As_IProcessStep());
+			runner.Run(() => Assert.Process_Throws_NullReferenceException_If_Arg_Is_Not_Supplied_When_Running_As_Process());
 
+			runner.Run(() => Assert.ICommandInput_Takes_Generic_Argument());
+			runner.Run(() => Assert.IQueryInput_Takes_Generic_Argument());
+			runner.Run(() => Assert.IQueryOutput_Takes_Generic_Argument());
+			
 			Console.WriteLine("Done");
 		}
 	}
