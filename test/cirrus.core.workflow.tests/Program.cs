@@ -1,13 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Cirrus.Test;
+using Cirrus.Core.Workflow.Processes;
 
-namespace Cirrus.Core.Workflow.Tests
+namespace Cirrus.Core.Process.Tests
 {
-	//Workflow<TIn1, TOut1, TIn2, TOut2, TIn3, TOut3 ...>
-	//When executing, unravel the workflow...
-	//Workflow<TIn1, TOut1, TIn2, TOut2> -> Workflow<TIn2, TOut2> -> TOut2
-	//The idea is that we can chain up our ICommand<TIn, TOut>, and execute the workflow over all the services in our cluster
+	//Process<TIn1, TOut1, TIn2, TOut2, TIn3, TOut3 ...>
+	//When executing, unravel the Process...
+	//Process<TIn1, TOut1, TIn2, TOut2> -> Process<TIn2, TOut2> -> TOut2
+	//The idea is that we can chain up our IProcessStep<TIn, TOut>, and execute the Process over all the services in our cluster
 	class Program
 	{
 		//Runner
@@ -17,11 +18,11 @@ namespace Cirrus.Core.Workflow.Tests
 
 			Console.WriteLine("Testing...");
 
-			runner.Run(() => Assert.ICommandInput_Takes_Generic_Argument());
-			runner.Run(() => Assert.ICommandOutput_Takes_Generic_Argument());
+			runner.Run(() => Assert.IProcessStepInput_Takes_Generic_Argument());
+			runner.Run(() => Assert.IProcessStepOutput_Takes_Generic_Argument());
 
-			runner.Run(() => Assert.Workflow_Takes_Generic_Command_Args());
-			runner.Run(() => Assert.Workflow_Returns_Unravelled_Workflow_As_Result());
+			runner.Run(() => Assert.Process_Takes_Generic_ProcessStep_Args());
+			runner.Run(() => Assert.Process_Returns_Unravelled_Process_As_Result());
 
 			Console.WriteLine("Done");
 		}
@@ -30,40 +31,56 @@ namespace Cirrus.Core.Workflow.Tests
 	//Tests
 	static class Assert
 	{
-		public static bool ICommandInput_Takes_Generic_Argument()
+		public static bool IProcessStepInput_Takes_Generic_Argument()
 		{
 			throw new NotImplementedException();
 		}
 
-		public static bool ICommandOutput_Takes_Generic_Argument()
+		public static bool IProcessStepOutput_Takes_Generic_Argument()
 		{
 			throw new NotImplementedException();
 		}
 
-		public static bool Workflow_Takes_Generic_Command_Args()
+		public static bool Process_Takes_Generic_ProcessStep_Args()
 		{
 			string input = "my input";
-			var workflow = new WorkflowContainer<TestCommandInput1, TestCommandOutput1>(new TestCommandInput1(input));
+			var Process = new Process<TestProcessStepInput1, TestProcessStepOutput1>(new TestProcessStepInput1(input));
 			
-			var result = workflow.Execute(new TestCommand1()).Result;
+			var result = Process.ExecuteStep(new TestProcessStep1()).Result;
 
 			return result.Result == input;
 		}
 
-		public static bool Workflow_Returns_Unravelled_Workflow_As_Result()
+		public static bool Process_Returns_Unravelled_Process_As_Result()
 		{
-			var workflow = new WorkflowContainer<
-				TestCommandInput1, TestCommandOutput1, 
-				TestCommandInput2, TestCommandOutput2>
+			var Process = new Process<
+				TestProcessStepInput1, TestProcessStepOutput1, 
+				TestProcessStepInput2, TestProcessStepOutput2>
 			(
-				new TestCommandInput1("my input"),
+				new TestProcessStepInput1("my input"),
 				
-				(out1) => new TestCommandInput2(out1.Result)
+				(out1) => new TestProcessStepInput2(out1.Result)
 			);
 
-		    var result = workflow.Execute(new TestCommand1()).Result;
+		    var result = Process.ExecuteStep(new TestProcessStep1()).Result;
 
-		    return result is WorkflowContainer<TestCommandInput2, TestCommandOutput2>;
+		    return result is Process<TestProcessStepInput2, TestProcessStepOutput2>;
+		}
+
+		public static bool Process_Executes_All_Steps()
+		{
+			var Process = new Process<
+				TestProcessStepInput1, TestProcessStepOutput1, 
+				TestProcessStepInput2, TestProcessStepOutput2>
+			(
+				new TestProcessStepInput1("my input"),
+				
+				(out1) => new TestProcessStepInput2(out1.Result)
+			);
+
+		    var result = Process.Execute(new TestProcessStep1(), new TestProcessStep2()).Result;
+
+		    return result is TestProcessStepOutput2;
 		}
 	}
 }

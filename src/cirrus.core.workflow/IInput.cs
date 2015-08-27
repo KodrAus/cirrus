@@ -1,18 +1,18 @@
 namespace Cirrus.Core.Workflow
 {
-	public interface ICommandInput
+	public interface IInput
 	{
 
 	}
 
-	public interface ICommandInput<T> : ICommandInput
+	public interface IInput<T> : IInput
 	{
 		T Input { get; }
 	}
 
-	public class CommandInputBase<T> : ICommandInput<T>
+	public class InputBase<T> : IInput<T>
 	{
-		public CommandInputBase(T input)
+		public InputBase(T input)
 		{
 			_input = input;
 		}

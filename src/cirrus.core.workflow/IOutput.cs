@@ -1,20 +1,20 @@
 namespace Cirrus.Core.Workflow
 {
-	public interface ICommandOutput
+	public interface IOutput
 	{
 
 	}
 
-	public interface ICommandOutput<T> : ICommandOutput
+	public interface IOutput<T> : IOutput
 	{
 		T Result { get; }
 
 		//TODO: Errors n stuff
 	}
 
-	public class CommandOutputBase<T> : ICommandOutput<T>
+	public class OutputBase<T> : IOutput<T>
 	{
-		public CommandOutputBase(T result)
+		public OutputBase(T result)
 		{
 			_result = result;
 		}
