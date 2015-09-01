@@ -4,14 +4,14 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 	{
 		public ProductBuilder WithId(string id)
 		{
-			_id = id;
+			Id = id;
 
 			return this;
 		}
 
 		public ProductBuilder WithTitle(string title)
 		{
-			_title = title;
+			Title = title;
 
 			return this;
 		}

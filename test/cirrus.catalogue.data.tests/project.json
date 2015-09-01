@@ -1,0 +1,13 @@
+{
+	"version": "1.0.0",
+	"title": "cirrus.catalogue.data.tests",
+
+	"dependencies": {
+		"cirrus.catalogue.data": "1.0.0",
+		"cirrus.runner": "1.0.0"
+	},
+
+	"frameworks": {
+		"dnx451": {}
+	}
+}

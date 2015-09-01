@@ -1,3 +1,4 @@
+using System.Linq;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
 
 namespace Cirrus.Catalogue.Domain.Tests.Products
@@ -18,6 +19,23 @@ namespace Cirrus.Catalogue.Domain.Tests.Products
 			var product = new ProductBuilder().WithTitle(title).GetResult();
 
 			return product.Title == title;
+		}
+
+		public static bool Has_Dynamic_Details()
+		{
+			string mySpecialField = "special things";
+			var product = new Product();
+
+			product.Details.MySpecialField = mySpecialField;
+
+			return product.Details.MySpecialField == mySpecialField;
+		}
+
+		public static bool Has_Variants()
+		{
+			var product = new Product();
+
+			return product.Variants.Count() == 1;
 		}
 	}
 }

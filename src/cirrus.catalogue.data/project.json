@@ -1,0 +1,16 @@
+{
+	"version": "1.0.0",
+	"title": "cirrus.catalogue.data",
+
+	"dependencies": {
+		"cirrus.catalogue.domain": "1.0.0",
+		"Nest": "1.7.1",
+		"AutoMapper": "4.0.4"
+	},
+
+	"frameworks": {
+		"dnx451": {
+
+		}
+	}
+}

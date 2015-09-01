@@ -1,0 +1,145 @@
+{
+  "locked": false,
+  "version": 1,
+  "targets": {
+    "DNX,Version=v4.5.1": {
+      "AutoMapper/4.0.4": {
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net45/AutoMapper.dll": {}
+        },
+        "runtime": {
+          "lib/net45/AutoMapper.dll": {}
+        }
+      },
+      "Elasticsearch.Net/1.7.1": {
+        "compile": {
+          "lib/net45/Elasticsearch.Net.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Elasticsearch.Net.dll": {}
+        }
+      },
+      "Nest/1.7.1": {
+        "dependencies": {
+          "Elasticsearch.Net": "1.7.1",
+          "Newtonsoft.Json": "[7.0, 8.0)"
+        },
+        "compile": {
+          "lib/net45/Nest.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Nest.dll": {}
+        }
+      },
+      "Newtonsoft.Json/7.0.1": {
+        "compile": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/net45/Newtonsoft.Json.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AutoMapper/4.0.4": {
+      "sha512": "7EJaXSD7mI/T1nwlAgsUcxiuSW4zAY8cQy52/onmc8+lM4T9XqVlDqvFuY9pzcNxI1c2X3GD47G8qDO0hcip1g==",
+      "files": [
+        "AutoMapper.4.0.4.nupkg",
+        "AutoMapper.4.0.4.nupkg.sha512",
+        "AutoMapper.nuspec",
+        "lib/dotnet/AutoMapper.dll",
+        "lib/dotnet/AutoMapper.xml",
+        "lib/MonoAndroid/AutoMapper.dll",
+        "lib/MonoAndroid/AutoMapper.XML",
+        "lib/MonoTouch/AutoMapper.dll",
+        "lib/MonoTouch/AutoMapper.XML",
+        "lib/net40/AutoMapper.dll",
+        "lib/net40/AutoMapper.xml",
+        "lib/net45/AutoMapper.dll",
+        "lib/net45/AutoMapper.xml",
+        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/AutoMapper.dll",
+        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/AutoMapper.xml",
+        "lib/sl50/AutoMapper.dll",
+        "lib/sl50/AutoMapper.xml",
+        "lib/win/AutoMapper.dll",
+        "lib/win/AutoMapper.xml",
+        "lib/wp80/AutoMapper.dll",
+        "lib/wp80/AutoMapper.xml",
+        "lib/wpa81/AutoMapper.dll",
+        "lib/wpa81/AutoMapper.xml",
+        "lib/Xamarin.iOS10/AutoMapper.dll",
+        "lib/Xamarin.iOS10/AutoMapper.XML"
+      ]
+    },
+    "Elasticsearch.Net/1.7.1": {
+      "sha512": "IiIV3w6IBOD7owqrPO591aLXc2J8skuH2xqiwSoQl4sL/X01lBhQIOHQkjQSV5BO6y9Fdn1d6jms1KayM4oJwg==",
+      "files": [
+        "Elasticsearch.Net.1.7.1.nupkg",
+        "Elasticsearch.Net.1.7.1.nupkg.sha512",
+        "Elasticsearch.Net.nuspec",
+        "lib/Elasticsearch.Net.dll",
+        "lib/Elasticsearch.Net.pdb",
+        "lib/Elasticsearch.Net.XML",
+        "lib/net40/Elasticsearch.Net.dll",
+        "lib/net40/Elasticsearch.Net.pdb",
+        "lib/net40/Elasticsearch.Net.XML",
+        "lib/net45/Elasticsearch.Net.dll",
+        "lib/net45/Elasticsearch.Net.pdb",
+        "lib/net45/Elasticsearch.Net.XML"
+      ]
+    },
+    "Nest/1.7.1": {
+      "sha512": "S0IoqIyK6KrFUp4yrLoCghbFuyvO21B7MzXjlqRxH1D7DfMgI1zoEhGpfBLd6DfhOiNwkFhyyelXNyTH+W2wAw==",
+      "files": [
+        "lib/Nest.dll",
+        "lib/Nest.pdb",
+        "lib/Nest.XML",
+        "lib/net40/Nest.dll",
+        "lib/net40/Nest.pdb",
+        "lib/net40/Nest.XML",
+        "lib/net45/Nest.dll",
+        "lib/net45/Nest.pdb",
+        "lib/net45/Nest.XML",
+        "Nest.1.7.1.nupkg",
+        "Nest.1.7.1.nupkg.sha512",
+        "Nest.nuspec"
+      ]
+    },
+    "Newtonsoft.Json/7.0.1": {
+      "sha512": "q3V4KLetMLnt1gpAVWgtXnHjKs0UG/RalBc29u2ZKxd5t5Ze4JBL5WiiYIklJyK/5CRiIiNwigVQUo0FgbsuWA==",
+      "files": [
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
+        "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
+        "Newtonsoft.Json.7.0.1.nupkg",
+        "Newtonsoft.Json.7.0.1.nupkg.sha512",
+        "Newtonsoft.Json.nuspec",
+        "tools/install.ps1"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "": [
+      "cirrus.catalogue.domain >= 1.0.0",
+      "Nest >= 1.7.1",
+      "AutoMapper >= 4.0.4"
+    ],
+    "DNX,Version=v4.5.1": []
+  }
+}
