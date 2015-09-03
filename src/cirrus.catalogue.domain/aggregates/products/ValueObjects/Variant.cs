@@ -48,8 +48,6 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects
 			}
 		}
 
-		//TODO: Work out how to best transparently serialize these
-		//Probably just ship up a Dictionary?
 		protected ExpandoObject _details;
 		public dynamic Details
 		{
