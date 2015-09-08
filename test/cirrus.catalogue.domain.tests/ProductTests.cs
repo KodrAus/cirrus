@@ -1,5 +1,7 @@
 using System.Linq;
+using Cirrus.Catalogue.Domain.Aggregates;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
+using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 
 namespace Cirrus.Catalogue.Domain.Tests.Products
 {
@@ -33,9 +35,14 @@ namespace Cirrus.Catalogue.Domain.Tests.Products
 
 		public static bool Has_Variants()
 		{
-			var product = new Product();
+			var product = new ProductBuilder()
+				.WithVariants(
+					new Product(),
+					new Product()
+				)
+				.AsAggregate<ProductVariantsAggregate>(new AggregateFactory());
 
-			return product.Variants.Count() == 1;
+			return product.Variants.Count() == 2;
 		}
 	}
 }

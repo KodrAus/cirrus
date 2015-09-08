@@ -3,7 +3,8 @@
 	"title": "cirrus.catalogue.domain",
 
 	"dependencies": {
-		"Newtonsoft.Json": "7.0.1"
+		"Newtonsoft.Json": "7.0.1",
+		"AutoMapper": "3.3.0"
 	},
 
 	"frameworks": {

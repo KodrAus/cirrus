@@ -1,36 +1,32 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Dynamic;
 using Newtonsoft.Json;
 
-namespace Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects
+namespace Cirrus.Catalogue.Domain.Aggregates.Products.Entities
 {
-	//TODO: Improve accessibility
-	//TODO: Improve relation to parent Product
-	public class Variant : IProduct
+	public class Product
 	{
-		public Variant()
+		public Product()
 		{
+			_variants = new List<Product>();
 			_details = new ExpandoObject();
 		}
 
-		public Variant(string id, string title)
+		public Product(string id, string title)
 			: this()
 		{
-			Id = id;
-			Title = title;
+			_id = id;
+			_title = title;
 		}
 
 		[JsonIgnore]
 		protected string _id;
-		[JsonIgnore]
 		public string Id
 		{
 			get
 			{
 				return _id;
-			}
-			internal set
-			{
-				_id = value;
 			}
 		}
 
@@ -42,14 +38,9 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects
 			{
 				return _title;
 			}
-			internal set
-			{
-				_title = value;
-			}
 		}
 
-		//TODO: Work out how to best transparently serialize these
-		//Probably just ship up a Dictionary?
+		[JsonIgnore]
 		protected ExpandoObject _details;
 		public dynamic Details
 		{
@@ -60,6 +51,16 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects
 			set
 			{
 				_details = value;
+			}
+		}
+
+		[JsonIgnore]
+		protected IEnumerable<Product> _variants;
+		protected IEnumerable<Product> Variants
+		{
+			get
+			{
+				return _variants;
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 using System;
 using Cirrus.Test;
+using Cirrus.Catalogue.Domain.Aggregates;
 
 namespace Cirrus.Catalogue.Domain.Tests
 {
@@ -8,6 +9,7 @@ namespace Cirrus.Catalogue.Domain.Tests
 		static void Main(string[] args)
 		{
 			//Run tests
+			AggregateFactory.Configure();
 			var runner = new TestRunner();
 
 			Console.WriteLine("Testing...");
@@ -15,7 +17,6 @@ namespace Cirrus.Catalogue.Domain.Tests
 			runner.Run(() => Products.Assert.Has_Id());
 			runner.Run(() => Products.Assert.Has_Title());
 			runner.Run(() => Products.Assert.Has_Dynamic_Details());
-			runner.Run(() => ProductVariants.Assert.Has_Dynamic_Details());
 			
 			Console.WriteLine("Done");
 		}

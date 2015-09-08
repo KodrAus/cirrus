@@ -5,7 +5,7 @@ using Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects;
 namespace Cirrus.Catalogue.Data.DTOs
 {
 	public class ProductDTO : Product
-	{	
+	{
 		public new string Id
 		{
 			get
@@ -14,11 +14,23 @@ namespace Cirrus.Catalogue.Data.DTOs
 			}
 			set
 			{
-				_id = value;
+				_id = value
 			}
 		}
 
-		public new IEnumerable<Variant> Variants
+		public new string Title
+		{
+			get
+			{
+				return _title;
+			}
+			set
+			{
+				_title = value;
+			}
+		}
+
+		public new IEnumerable<Product> Variants
 		{
 			get
 			{

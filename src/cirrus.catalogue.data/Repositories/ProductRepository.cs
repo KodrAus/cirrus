@@ -2,8 +2,9 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Cirrus.Catalogue.Domain.Aggregates;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
-using Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects;
+using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 using Cirrus.Catalogue.Data.DTOs;
 using Nest;
 using AutoMapper;
@@ -12,15 +13,16 @@ namespace Cirrus.Catalogue.Data.Repositories
 {
 	public class ProductRepository : IProductRepository
 	{
-		public ProductRepository()
+		public ProductRepository(IAggregateFactory aggregateFactory)
 		{
 			_client = new ElasticClient();
+			_factory = aggregateFactory;
 
-			Mapper.CreateMap<Variant, VariantDTO>();
 			Mapper.CreateMap<Product, ProductDTO>();
 		}
 
 		private ElasticClient _client;
+		private readonly IAggregateFactory _factory;
 
 		public async Task IndexAsync(Product product)
 		{
@@ -47,22 +49,17 @@ namespace Cirrus.Catalogue.Data.Repositories
 				}
 			}
 
-			//Update the rest of the document
+			//TODO: Update the rest of the document
 			//await _client.IndexAsync(dto, idx => idx.Index("products"));
 		}
 
-		public async Task<IEnumerable<Variant>> GetVariantsAsync(string id)
+		public async Task<ProductVariantsAggregate> GetVariantsAsync(string id)
 		{
+			//TODO: Only return appropriate source fields, not everything
 			var result = await _client.GetAsync<ProductDTO>(id, "products");
 			var product = result.Source;
 
-			if (product != null && product.Variants != null)
-			{
-				Console.WriteLine("Found product variants");
-				return product.Variants;
-			}
-
-			return new List<Variant>();
+			return product.AsAggregate<ProductVariantsAggregate>(_factory);
 		}
 	}
 }
