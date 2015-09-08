@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Cirrus.Core.Workflow.Processes
@@ -59,13 +60,13 @@ namespace Cirrus.Core.Workflow.Processes
 		where TIn2 : class, IProcessInput
 		where TOut2 : class, IProcessOutput
 	{
-		public Process(TIn1 arg, Func<TOut1, TIn2> thread1)
+		public Process(TIn1 arg, Expression<Func<TOut1, TIn2>> thread1)
 		{
 			_arg = arg;
 			_thread1 = thread1;
 		}
 
-		public Process(IProcessStep<TIn1, TOut1> step1, IProcessStep<TIn2, TOut2> step2, Func<TOut1, TIn2> thread1)
+		public Process(IProcessStep<TIn1, TOut1> step1, IProcessStep<TIn2, TOut2> step2, Expression<Func<TOut1, TIn2>> thread1)
 			: this(null, thread1)
 		{
 			_step1 = step1;
@@ -77,7 +78,7 @@ namespace Cirrus.Core.Workflow.Processes
 		private IProcessStep<TIn1, TOut1> _step1; 
 		private IProcessStep<TIn2, TOut2> _step2;
 
-		private Func<TOut1, TIn2> _thread1;
+		private Expression<Func<TOut1, TIn2>> _thread1;
 
 		public async Task<Process<TIn2, TOut2>> ExecuteStep(IProcessStep<TIn1, TOut1> process)
 		{
@@ -88,14 +89,14 @@ namespace Cirrus.Core.Workflow.Processes
 
 			var result = await process.Execute(_arg);
 
-			return new Process<TIn2, TOut2>(_thread1(result));
+			return new Process<TIn2, TOut2>(_thread1.Compile().Invoke(result));
 		}
 
 		public async Task<TOut2> Execute(IProcessStep<TIn1, TOut1> process1, IProcessStep<TIn2, TOut2> process2)
 		{
 			var result = await process1.Execute(_arg);
 
-			return await process2.Execute(_thread1(result));
+			return await process2.Execute(_thread1.Compile().Invoke(result));
 		}
 
 		public async Task<TOut2> Execute(TIn1 arg)
@@ -119,7 +120,7 @@ namespace Cirrus.Core.Workflow.Processes
 		where TIn3 : class, IProcessInput
 		where TOut3 : class, IProcessOutput
 	{
-		public Process(TIn1 arg, Func<TOut1, TIn2> thread1, Func<TOut2, TIn3> thread2)
+		public Process(TIn1 arg, Expression<Func<TOut1, TIn2>> thread1, Expression<Func<TOut2, TIn3>> thread2)
 		{
 			_arg = arg;
 
@@ -127,7 +128,7 @@ namespace Cirrus.Core.Workflow.Processes
 			_thread2 = thread2;
 		}
 
-		public Process(IProcessStep<TIn1, TOut1> step1, IProcessStep<TIn2, TOut2> step2, IProcessStep<TIn3, TOut3> step3, Func<TOut1, TIn2> thread1, Func<TOut2, TIn3> thread2)
+		public Process(IProcessStep<TIn1, TOut1> step1, IProcessStep<TIn2, TOut2> step2, IProcessStep<TIn3, TOut3> step3, Expression<Func<TOut1, TIn2>> thread1, Expression<Func<TOut2, TIn3>> thread2)
 			: this(null, thread1, thread2)
 		{
 			_step1 = step1;
@@ -141,8 +142,8 @@ namespace Cirrus.Core.Workflow.Processes
 		private IProcessStep<TIn2, TOut2> _step2;
 		private IProcessStep<TIn3, TOut3> _step3;
 
-		private Func<TOut1, TIn2> _thread1;
-		private Func<TOut2, TIn3> _thread2;
+		private Expression<Func<TOut1, TIn2>> _thread1;
+		private Expression<Func<TOut2, TIn3>> _thread2;
 
 		public async Task<Process<TIn2, TOut2, TIn3, TOut3>> ExecuteStep(IProcessStep<TIn1, TOut1> process)
 		{
@@ -153,15 +154,15 @@ namespace Cirrus.Core.Workflow.Processes
 
 			var result = await process.Execute(_arg);
 
-			return new Process<TIn2, TOut2, TIn3, TOut3>(_thread1(result), _thread2);
+			return new Process<TIn2, TOut2, TIn3, TOut3>(_thread1.Compile().Invoke(result), _thread2);
 		}
 
 		public async Task<TOut3> Execute(IProcessStep<TIn1, TOut1> process1, IProcessStep<TIn2, TOut2> process2, IProcessStep<TIn3, TOut3> process3)
 		{
 			var result1 = await process1.Execute(_arg);
-			var result2 = await process2.Execute(_thread1(result1));
+			var result2 = await process2.Execute(_thread1.Compile().Invoke(result1));
 
-			return await process3.Execute(_thread2(result2));
+			return await process3.Execute(_thread2.Compile().Invoke(result2));
 		}
 
 		public async Task<TOut3> Execute(TIn1 arg)
