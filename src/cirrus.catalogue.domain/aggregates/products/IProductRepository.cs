@@ -9,5 +9,6 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 		Task IndexAsync(Product product);
 		Task<ProductSummaryAggregate> GetSummaryAsync(string id);
 		Task<ProductVariantsAggregate> GetVariantsAsync(string id);
+		Task<ProductVariantsAggregate> GetNestedVariantsAsync(params string[] idPath);
 	}
 }

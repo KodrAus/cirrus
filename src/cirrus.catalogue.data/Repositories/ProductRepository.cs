@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +30,13 @@ namespace Cirrus.Catalogue.Data.Repositories
 			var dto = Mapper.Map<ProductDTO>(product);
 
 			//Update the variants partially, using the script
+			//This method isn't going to support n-recursive product variants
 			foreach (var variant in dto.Variants)
 			{
 				var variantResponse = await _client.UpdateAsync<ProductDTO>(body => body
 					.Id(dto.Id)
 
-					.Params(pms => pms.Add("new_varaint", variant))
+					.Params(pms => pms.Add("new_variant", variant))
 					.Script(Transactional.Scripts.update_variants)
 					.Lang("groovy")
 
@@ -45,6 +47,7 @@ namespace Cirrus.Catalogue.Data.Repositories
 
 				if (!variantResponse.ConnectionStatus.Success)
 				{
+					Console.WriteLine(Encoding.Default.GetString(variantResponse.ConnectionStatus.Request));
 					throw variantResponse.ConnectionStatus.OriginalException;
 				}
 			}
@@ -53,13 +56,27 @@ namespace Cirrus.Catalogue.Data.Repositories
 			//await _client.IndexAsync(dto, idx => idx.Index("products"));
 		}
 
+		public async Task<ProductSummaryAggregate> GetSummaryAsync(string id)
+		{
+			throw new NotImplementedException();
+		}
+
 		public async Task<ProductVariantsAggregate> GetVariantsAsync(string id)
 		{
 			//TODO: Only return appropriate source fields, not everything
 			var result = await _client.GetAsync<ProductDTO>(id, "products");
+
 			var product = result.Source;
 
 			return product.AsAggregate<ProductVariantsAggregate>(_factory);
+		}
+
+		public async Task<ProductVariantsAggregate> GetNestedVariantsAsync(params string[] idPath)
+		{
+			//Each id in the path constitutes a variant
+			//So [id1, id2, id3] -> _source.variants[id2].variants[id3]
+			
+			throw new NotImplementedException();
 		}
 	}
 }

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
-using Cirrus.Catalogue.Domain.Aggregates.Products;
-using Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects;
+using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 
 namespace Cirrus.Catalogue.Data.DTOs
 {
@@ -14,7 +13,7 @@ namespace Cirrus.Catalogue.Data.DTOs
 			}
 			set
 			{
-				_id = value
+				_id = value;
 			}
 		}
 

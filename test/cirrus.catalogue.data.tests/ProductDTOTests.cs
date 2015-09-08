@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Collections.Generic;
-using Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects;
+using Cirrus.Catalogue.Domain.Aggregates;
+using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
 using Cirrus.Catalogue.Data.DTOs;
 
@@ -12,13 +13,13 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductDTOs
 		{
 			var dto = new ProductDTO();
 
-			dto.Variants = new List<Variant>
+			dto.Variants = new List<Product>
 			{
-				new VariantDTO(),
-				new VariantDTO()
+				new ProductDTO(),
+				new ProductDTO()
 			};
 
-			Product model = dto;
+			var model = dto.AsAggregate<ProductVariantsAggregate>(new AggregateFactory());
 
 			return model.Variants.Count() == 2;
 		}

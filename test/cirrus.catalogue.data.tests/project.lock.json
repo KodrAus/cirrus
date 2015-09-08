@@ -3,21 +3,36 @@
   "version": 1,
   "targets": {
     "DNX,Version=v4.5.1": {
-      "AutoMapper/4.0.4": {
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
+      "AutoMapper/3.3.0": {
+        "type": "package",
         "compile": {
-          "lib/net45/AutoMapper.dll": {}
+          "lib/net40/AutoMapper.Net4.dll": {},
+          "lib/net40/AutoMapper.dll": {}
         },
         "runtime": {
-          "lib/net45/AutoMapper.dll": {}
+          "lib/net40/AutoMapper.Net4.dll": {},
+          "lib/net40/AutoMapper.dll": {}
         }
       },
+      "cirrus.catalogue.data/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "cirrus.catalogue.domain": "1.0.0",
+          "Nest": "1.7.1"
+        }
+      },
+      "cirrus.catalogue.domain/1.0.0": {
+        "type": "project",
+        "dependencies": {
+          "AutoMapper": "3.3.0",
+          "Newtonsoft.Json": "7.0.1"
+        }
+      },
+      "cirrus.runner/1.0.0": {
+        "type": "project"
+      },
       "Elasticsearch.Net/1.7.1": {
+        "type": "package",
         "compile": {
           "lib/net45/Elasticsearch.Net.dll": {}
         },
@@ -26,6 +41,7 @@
         }
       },
       "Nest/1.7.1": {
+        "type": "package",
         "dependencies": {
           "Elasticsearch.Net": "1.7.1",
           "Newtonsoft.Json": "[7.0, 8.0)"
@@ -38,6 +54,7 @@
         }
       },
       "Newtonsoft.Json/7.0.1": {
+        "type": "package",
         "compile": {
           "lib/net45/Newtonsoft.Json.dll": {}
         },
@@ -48,37 +65,69 @@
     }
   },
   "libraries": {
-    "AutoMapper/4.0.4": {
-      "sha512": "7EJaXSD7mI/T1nwlAgsUcxiuSW4zAY8cQy52/onmc8+lM4T9XqVlDqvFuY9pzcNxI1c2X3GD47G8qDO0hcip1g==",
+    "cirrus.catalogue.data/1.0.0": {
+      "type": "project",
+      "path": "../../src/cirrus.catalogue.data/project.json"
+    },
+    "cirrus.catalogue.domain/1.0.0": {
+      "type": "project",
+      "path": "../../src/cirrus.catalogue.domain/project.json"
+    },
+    "cirrus.runner/1.0.0": {
+      "type": "project",
+      "path": "../cirrus.runner/project.json"
+    },
+    "AutoMapper/3.3.0": {
+      "type": "package",
+      "sha512": "3zf51TOV9sRBVapTDqciVZAZ8SHYIDQzeRdj7ANy1G5kprymvjQynbDSfjcVVlj1QBPyP01RD59C6g6cDmj/eA==",
       "files": [
-        "AutoMapper.4.0.4.nupkg",
-        "AutoMapper.4.0.4.nupkg.sha512",
+        "AutoMapper.3.3.0.nupkg",
+        "AutoMapper.3.3.0.nupkg.sha512",
         "AutoMapper.nuspec",
-        "lib/dotnet/AutoMapper.dll",
-        "lib/dotnet/AutoMapper.xml",
+        "lib/MonoAndroid/AutoMapper.Android.dll",
         "lib/MonoAndroid/AutoMapper.dll",
-        "lib/MonoAndroid/AutoMapper.XML",
+        "lib/MonoAndroid/AutoMapper.xml",
         "lib/MonoTouch/AutoMapper.dll",
-        "lib/MonoTouch/AutoMapper.XML",
+        "lib/MonoTouch/AutoMapper.iOS.dll",
+        "lib/MonoTouch/AutoMapper.xml",
         "lib/net40/AutoMapper.dll",
+        "lib/net40/AutoMapper.Net4.dll",
         "lib/net40/AutoMapper.xml",
-        "lib/net45/AutoMapper.dll",
-        "lib/net45/AutoMapper.xml",
-        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/AutoMapper.dll",
-        "lib/portable-net45+win+wpa81+wp80+MonoAndroid10+Xamarin.iOS10+MonoTouch10/AutoMapper.xml",
-        "lib/sl50/AutoMapper.dll",
-        "lib/sl50/AutoMapper.xml",
-        "lib/win/AutoMapper.dll",
-        "lib/win/AutoMapper.xml",
-        "lib/wp80/AutoMapper.dll",
-        "lib/wp80/AutoMapper.xml",
+        "lib/portable-windows8+net40+wp8+sl5+MonoAndroid+MonoTouch/AutoMapper.dll",
+        "lib/portable-windows8+net40+wp8+sl5+MonoAndroid+MonoTouch/AutoMapper.xml",
+        "lib/portable-windows8+net40+wp8+wpa81+sl5+MonoAndroid+MonoTouch/AutoMapper.dll",
+        "lib/portable-windows8+net40+wp8+wpa81+sl5+MonoAndroid+MonoTouch/AutoMapper.xml",
+        "lib/sl5/AutoMapper.dll",
+        "lib/sl5/AutoMapper.SL5.dll",
+        "lib/sl5/AutoMapper.xml",
+        "lib/windows8/AutoMapper.dll",
+        "lib/windows8/AutoMapper.WinRT.dll",
+        "lib/windows8/AutoMapper.xml",
+        "lib/wp8/AutoMapper.dll",
+        "lib/wp8/AutoMapper.WP8.dll",
+        "lib/wp8/AutoMapper.xml",
         "lib/wpa81/AutoMapper.dll",
+        "lib/wpa81/AutoMapper.WPA81.dll",
         "lib/wpa81/AutoMapper.xml",
-        "lib/Xamarin.iOS10/AutoMapper.dll",
-        "lib/Xamarin.iOS10/AutoMapper.XML"
+        "tools/AutoMapper.targets",
+        "tools/MonoAndroid/Install.ps1",
+        "tools/MonoAndroid/uninstall.ps1",
+        "tools/MonoTouch/Install.ps1",
+        "tools/MonoTouch/uninstall.ps1",
+        "tools/net40/Install.ps1",
+        "tools/net40/uninstall.ps1",
+        "tools/sl5/Install.ps1",
+        "tools/sl5/uninstall.ps1",
+        "tools/windows8/Install.ps1",
+        "tools/windows8/uninstall.ps1",
+        "tools/wp8/Install.ps1",
+        "tools/wp8/uninstall.ps1",
+        "tools/wpa81/Install.ps1",
+        "tools/wpa81/uninstall.ps1"
       ]
     },
     "Elasticsearch.Net/1.7.1": {
+      "type": "package",
       "sha512": "IiIV3w6IBOD7owqrPO591aLXc2J8skuH2xqiwSoQl4sL/X01lBhQIOHQkjQSV5BO6y9Fdn1d6jms1KayM4oJwg==",
       "files": [
         "Elasticsearch.Net.1.7.1.nupkg",
@@ -96,6 +145,7 @@
       ]
     },
     "Nest/1.7.1": {
+      "type": "package",
       "sha512": "S0IoqIyK6KrFUp4yrLoCghbFuyvO21B7MzXjlqRxH1D7DfMgI1zoEhGpfBLd6DfhOiNwkFhyyelXNyTH+W2wAw==",
       "files": [
         "lib/Nest.dll",
@@ -113,6 +163,7 @@
       ]
     },
     "Newtonsoft.Json/7.0.1": {
+      "type": "package",
       "sha512": "q3V4KLetMLnt1gpAVWgtXnHjKs0UG/RalBc29u2ZKxd5t5Ze4JBL5WiiYIklJyK/5CRiIiNwigVQUo0FgbsuWA==",
       "files": [
         "lib/net20/Newtonsoft.Json.dll",

@@ -2,8 +2,9 @@ using System;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using Cirrus.Catalogue.Domain.Aggregates;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
-using Cirrus.Catalogue.Domain.Aggregates.Products.ValueObjects;
+using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 using Cirrus.Catalogue.Data.DTOs;
 using Cirrus.Catalogue.Data.Repositories;
 
@@ -13,12 +14,12 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 	{
 		public static bool Can_Index_Products()
 		{
-			var repository = new ProductRepository();
+			var repository = new ProductRepository(new AggregateFactory());
 
 			var product = new ProductDTO();
 			product.Id = Guid.NewGuid().ToString();
 
-			var variant = new VariantDTO();
+			var variant = new ProductDTO();
 
 			variant.Id = "my id";
 			variant.Title = "my title";
@@ -26,26 +27,28 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 			variant.Details.CustomField1 = "a string value";
 			variant.Details.CustomField2 = 42;
 
-			product.Variants = new List<Variant>
+			product.Variants = new List<Product>
 			{
 				variant
 			};
 
 			repository.IndexAsync(product).Wait();
 
-			return true;
+			var result = repository.GetSummaryAsync(product.Id).Result;
+
+			return product.Title == result.Title;
 		}
 
 		public static bool Can_Partially_Update_Product_Variants()
 		{
-			var repository = new ProductRepository();
+			var repository = new ProductRepository(new AggregateFactory());
 
 			//Create a product
 			var product = new ProductDTO();
 			product.Id = Guid.NewGuid().ToString();
 
 			//Create a variant
-			var variant1 = new VariantDTO();
+			var variant1 = new ProductDTO();
 
 			variant1.Id = "1";
 			variant1.Title = "my title 1";
@@ -54,12 +57,12 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 			variant1.Details.CustomField2 = 42;
 
 			//Create another variant
-			var variant2 = new VariantDTO();
+			var variant2 = new ProductDTO();
 
 			variant2.Id = "2";
 			variant2.Title = "my title 2";
 
-			product.Variants = new List<Variant>
+			product.Variants = new List<Product>
 			{
 				variant1,
 				variant2
@@ -67,8 +70,16 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 
 			Console.WriteLine("Indexing as " + product.Id);
 
-			//Index the product
-			repository.IndexAsync(product).Wait();
+			try
+			{
+				repository.IndexAsync(product).Wait();
+			}
+			catch (AggregateException ae)
+		    {
+		    	Console.WriteLine(ae.InnerExceptions[0].Message);
+		        throw ae.Flatten();
+		    }
+
 
 			Task.Delay(500).Wait();
 
@@ -80,7 +91,7 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 
 			variant2.Title = "my new title 2";
 
-			newProduct.Variants = new List<Variant>
+			newProduct.Variants = new List<Product>
 			{
 				variant2
 			};
@@ -95,12 +106,12 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 
 		public static bool Can_Get_All_Variants()
 		{
-			var repository = new ProductRepository();
+			var repository = new ProductRepository(new AggregateFactory());
 
 			var product = new ProductDTO();
 			product.Id = Guid.NewGuid().ToString();
 
-			var variant = new VariantDTO();
+			var variant = new ProductDTO();
 
 			variant.Id = "my id";
 			variant.Title = "my title";
@@ -108,20 +119,64 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 			variant.Details.CustomField1 = "a string value";
 			variant.Details.CustomField2 = 42;
 
-			product.Variants = new List<Variant>
+			product.Variants = new List<Product>
 			{
 				variant
 			};
-
-			Console.WriteLine(product);
 
 			repository.IndexAsync(product).Wait();
 
 			Task.Delay(500).Wait();
 
-			var variants = repository.GetVariantsAsync(product.Id).Result;
+			var result = repository.GetVariantsAsync(product.Id).Result;
 
-			return variants.Count() == 1;
+			return result.Variants.Count() == 1;
+		}
+
+		public static bool Can_Index_Recursive_Variants()
+		{
+			var repository = new ProductRepository(new AggregateFactory());
+
+			//Create a product
+			var product = new ProductDTO();
+			product.Id = Guid.NewGuid().ToString();
+
+			//Create a variant
+			var variant = new ProductDTO();
+
+			variant.Id = "my id";
+			variant.Title = "my title";
+
+			variant.Details.CustomField1 = "a string value";
+			variant.Details.CustomField2 = 42;
+
+			//Create a nested variant
+			var nestedVariant = new ProductDTO();
+
+			nestedVariant.Id = "my nested id";
+			nestedVariant.Title = "my nested title";
+
+			nestedVariant.Details.CustomField3 = DateTime.Now;
+
+			variant.Variants = new List<Product>
+			{
+				nestedVariant
+			};
+
+			product.Variants = new List<Product>
+			{
+				variant
+			};
+
+			Console.WriteLine("Indexing as " + product.Id);
+
+			repository.IndexAsync(product).Wait();
+
+			Task.Delay(500).Wait();
+
+			var result = repository.GetVariantsAsync(product.Id).Result;
+
+			return result.Variants.Count() == 1;
 		}
 	}
 }

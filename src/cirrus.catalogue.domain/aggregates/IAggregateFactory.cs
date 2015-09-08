@@ -1,6 +1,7 @@
 using Cirrus.Catalogue.Domain.Aggregates.Products;
 using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 
+//TODO: Move into a standard Cirrus.Core.Data package
 namespace Cirrus.Catalogue.Domain.Aggregates
 {
 	public interface IAggregateFactory
