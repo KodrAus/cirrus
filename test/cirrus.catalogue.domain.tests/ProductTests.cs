@@ -2,38 +2,65 @@ using System.Linq;
 using Cirrus.Catalogue.Domain.Aggregates;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
 using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
+using Xunit;
 
 namespace Cirrus.Catalogue.Domain.Tests.Products
 {
-	static class Assert
+	public class ProductTests
 	{
-		public static bool Has_Id()
+		[Fact]
+		public void Has_Id()
 		{
 			string id = "346598635dfh";
 			var product = new ProductBuilder().WithId(id).GetResult();
 
-			return product.Id == id;
+			Assert.Equal(product.Id, id);
 		}
 
-		public static bool Has_Title()
+		[Fact]
+		public void Has_Title()
 		{
 			string title = "My Product";
 			var product = new ProductBuilder().WithTitle(title).GetResult();
 
-			return product.Title == title;
+			Assert.Equal(product.Title, title);
 		}
 
-		public static bool Has_Dynamic_Details()
+		[Fact]
+		public void Has_Description()
+		{
+			AggregateFactory.Configure();
+
+			string desc = "My description";
+			var product = new ProductBuilder().WithDescription(desc).AsAggregate<ProductDetailsAggregate>(new AggregateFactory());
+
+			Assert.Equal(product.Description, desc);
+		}
+
+		[Fact]
+		public void Has_Summary()
+		{
+			AggregateFactory.Configure();
+
+			string summary = "My summary";
+			var product = new ProductBuilder().WithSummary(summary).AsAggregate<ProductSummaryAggregate>(new AggregateFactory());
+
+			Assert.Equal(product.Summary, summary);
+		}
+
+		[Fact]
+		public void Has_Dynamic_Details()
 		{
 			string mySpecialField = "special things";
 			var product = new Product();
 
 			product.Details.MySpecialField = mySpecialField;
 
-			return product.Details.MySpecialField == mySpecialField;
+			Assert.Equal(product.Details.MySpecialField, mySpecialField);
 		}
 
-		public static bool Has_Variants()
+		[Fact]
+		public void Has_Variants()
 		{
 			var product = new ProductBuilder()
 				.WithVariants(
@@ -42,7 +69,7 @@ namespace Cirrus.Catalogue.Domain.Tests.Products
 				)
 				.AsAggregate<ProductVariantsAggregate>(new AggregateFactory());
 
-			return product.Variants.Count() == 2;
+			Assert.Equal(product.Variants.Count(), 2);
 		}
 	}
 }

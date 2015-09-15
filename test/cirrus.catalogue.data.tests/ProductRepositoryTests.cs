@@ -7,13 +7,17 @@ using Cirrus.Catalogue.Domain.Aggregates.Products;
 using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 using Cirrus.Catalogue.Data.DTOs;
 using Cirrus.Catalogue.Data.Repositories;
+using Xunit;
 
 namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 {
-	static class Assert
+	public class ProductRepositoryTests
 	{
-		public static bool Can_Index_Products()
+		[Fact]
+		public async Task Can_Index_Products()
 		{
+			AggregateFactory.Configure();
+
 			var repository = new ProductRepository(new AggregateFactory());
 
 			var product = new ProductDTO();
@@ -32,15 +36,18 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 				variant
 			};
 
-			repository.IndexAsync(product).Wait();
+			await repository.IndexAsync(product);
 
-			var result = repository.GetSummaryAsync(product.Id).Result;
+			var result = await repository.GetSummaryAsync(product.Id);
 
-			return product.Title == result.Title;
+			Assert.Equal(product.Title, result.Title);
 		}
 
-		public static bool Can_Partially_Update_Product_Variants()
+		[Fact]
+		public async Task Can_Partially_Update_Product_Variants()
 		{
+			AggregateFactory.Configure();
+
 			var repository = new ProductRepository(new AggregateFactory());
 
 			//Create a product
@@ -70,18 +77,9 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 
 			Console.WriteLine("Indexing as " + product.Id);
 
-			try
-			{
-				repository.IndexAsync(product).Wait();
-			}
-			catch (AggregateException ae)
-		    {
-		    	Console.WriteLine(ae.InnerExceptions[0].Message);
-		        throw ae.Flatten();
-		    }
+			await repository.IndexAsync(product);
 
-
-			Task.Delay(500).Wait();
+			await Task.Delay(500);
 
 			//Create a 'copy' of the product, and reindex with just the second variant
 			//Should update the second variant, but leave the first untouched
@@ -99,13 +97,18 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 			Console.WriteLine("Reindexing as " + product.Id);
 
 			//TODO: Make this method work as expected
-			repository.IndexAsync(newProduct).Wait();
+			await repository.IndexAsync(newProduct);
+
+			var finalProduct = await repository.GetVariantsAsync(product.Id);
 
 			throw new NotImplementedException();
 		}
 
-		public static bool Can_Get_All_Variants()
+		[Fact]
+		public async Task Can_Get_All_Variants()
 		{
+			AggregateFactory.Configure();
+
 			var repository = new ProductRepository(new AggregateFactory());
 
 			var product = new ProductDTO();
@@ -124,17 +127,20 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 				variant
 			};
 
-			repository.IndexAsync(product).Wait();
+			await repository.IndexAsync(product);
 
 			Task.Delay(500).Wait();
 
-			var result = repository.GetVariantsAsync(product.Id).Result;
+			var result = await repository.GetVariantsAsync(product.Id);
 
-			return result.Variants.Count() == 1;
+			Assert.Equal(1, result.Variants.Count());
 		}
 
-		public static bool Can_Index_Recursive_Variants()
+		[Fact]
+		public async Task Can_Index_Recursive_Variants()
 		{
+			AggregateFactory.Configure();
+			
 			var repository = new ProductRepository(new AggregateFactory());
 
 			//Create a product
@@ -170,13 +176,13 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductRepositories
 
 			Console.WriteLine("Indexing as " + product.Id);
 
-			repository.IndexAsync(product).Wait();
+			await repository.IndexAsync(product);
 
 			Task.Delay(500).Wait();
 
-			var result = repository.GetVariantsAsync(product.Id).Result;
+			var result = await repository.GetVariantsAsync(product.Id);
 
-			return result.Variants.Count() == 1;
+			Assert.Equal(1, result.Variants.Count());
 		}
 	}
 }

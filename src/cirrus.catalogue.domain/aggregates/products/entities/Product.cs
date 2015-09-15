@@ -55,6 +55,26 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products.Entities
 		}
 
 		[JsonIgnore]
+		protected string _description;
+		protected string Description
+		{
+			get
+			{
+				return _description;
+			}
+		}
+
+		[JsonIgnore]
+		protected string _summary;
+		protected string Summary
+		{
+			get
+			{
+				return _summary;
+			}
+		}
+
+		[JsonIgnore]
 		protected IEnumerable<Product> _variants;
 		protected IEnumerable<Product> Variants
 		{

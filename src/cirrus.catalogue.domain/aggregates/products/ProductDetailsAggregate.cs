@@ -2,7 +2,7 @@ using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 
 namespace Cirrus.Catalogue.Domain.Aggregates.Products
 {
-	public class ProductSummaryAggregate : Product
+	public class ProductDetailsAggregate : ProductVariantsAggregate
 	{
 		public new string Summary
 		{
@@ -13,6 +13,18 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			set
 			{
 				_summary = value;
+			}
+		}
+		
+		public new string Description
+		{
+			get
+			{
+				return _description;
+			}
+			set
+			{
+				_description = value;
 			}
 		}
 	}

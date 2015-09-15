@@ -27,6 +27,7 @@ namespace Cirrus.Catalogue.Data.Repositories
 
 		public async Task IndexAsync(Product product)
 		{
+			Console.WriteLine(string.Format("Indexing product {0}", product.Id));
 			var dto = Mapper.Map<ProductDTO>(product);
 
 			//Update the variants partially, using the script
@@ -52,13 +53,29 @@ namespace Cirrus.Catalogue.Data.Repositories
 				}
 			}
 
-			//TODO: Update the rest of the document
-			//await _client.IndexAsync(dto, idx => idx.Index("products"));
+			//Update the rest of the document
+			dto.Variants = null;
+			var indexResponse = await _client.UpdateAsync<ProductDTO>(body => body
+				.Id(dto.Id)
+				.Doc(dto)
+				.Index("products")
+				.Type<ProductDTO>()
+			);
+
+			if (!indexResponse.ConnectionStatus.Success)
+			{
+				Console.WriteLine(Encoding.Default.GetString(indexResponse.ConnectionStatus.Request));
+				throw indexResponse.ConnectionStatus.OriginalException;
+			}
 		}
 
 		public async Task<ProductSummaryAggregate> GetSummaryAsync(string id)
 		{
-			throw new NotImplementedException();
+			var result = await _client.GetAsync<ProductDTO>(id, "products");
+
+			var product = result.Source;
+
+			return product.AsAggregate<ProductSummaryAggregate>(_factory);
 		}
 
 		public async Task<ProductVariantsAggregate> GetVariantsAsync(string id)

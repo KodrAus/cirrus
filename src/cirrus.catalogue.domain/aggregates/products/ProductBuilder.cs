@@ -18,6 +18,20 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			return this;
 		}
 
+		public ProductBuilder WithDescription(string description)
+		{
+			_description = description;
+
+			return this;
+		}
+
+		public ProductBuilder WithSummary(string summary)
+		{
+			_summary = summary;
+
+			return this;
+		}
+
 		public ProductBuilder WithVariants(params Product[] variants)
 		{
 			_variants = variants;

@@ -17,6 +17,7 @@ namespace Cirrus.Catalogue.Domain.Aggregates
             });
             
             Mapper.CreateMap<Product, ProductSummaryAggregate>();
+            Mapper.CreateMap<Product, ProductDetailsAggregate>();
             Mapper.CreateMap<Product, ProductVariantsAggregate>();
 		}
 

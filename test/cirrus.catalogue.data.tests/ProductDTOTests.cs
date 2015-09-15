@@ -4,13 +4,17 @@ using Cirrus.Catalogue.Domain.Aggregates;
 using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 using Cirrus.Catalogue.Domain.Aggregates.Products;
 using Cirrus.Catalogue.Data.DTOs;
+using Xunit;
 
 namespace Cirrus.Catalogue.Domain.Tests.ProductDTOs
 {
-	static class Assert
+	public class ProductDTOTests
 	{
-		public static bool Can_Set_Variants()
+		[Fact]
+		public void Can_Set_Variants()
 		{
+			AggregateFactory.Configure();
+			
 			var dto = new ProductDTO();
 
 			dto.Variants = new List<Product>
@@ -21,7 +25,7 @@ namespace Cirrus.Catalogue.Domain.Tests.ProductDTOs
 
 			var model = dto.AsAggregate<ProductVariantsAggregate>(new AggregateFactory());
 
-			return model.Variants.Count() == 2;
+			Assert.Equal(2, model.Variants.Count());
 		}
 	}
 }
