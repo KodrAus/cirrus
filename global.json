@@ -4,10 +4,13 @@
 		"test"
 	],
 	"projects": [
+		"cirrus.catalogue.domain",
+		"cirrus.catalogue.domain.tests",
+
+		"cirrus.catalogue.data",
+		"cirrus.catalogue.data.tests",
+
 		"cirrus.core.workflow",
-		"cirrus.core.workflow.tests",
-		
-		"cirrus.runner",
-		"cirrus.runner.tests"
+		"cirrus.core.workflow.tests"
 	]
 }

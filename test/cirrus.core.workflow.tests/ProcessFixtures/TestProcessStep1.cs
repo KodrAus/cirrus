@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using Cirrus.Core.Workflow.Processes;
 
-namespace Cirrus.Core.Process.Tests
+namespace Cirrus.Core.Workflow.Tests.ProcessFixtures
 {
 	public class TestProcessStepInput1 : ProcessInputBase<string>
 	{

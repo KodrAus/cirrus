@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Cirrus.Core.Workflow.Commands
 {
-	public interface ICommand
+	public interface ICommand : IAgent
 	{
 
 	}

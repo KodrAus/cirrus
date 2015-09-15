@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Cirrus.Core.Workflow.Processes
 {
-	public interface IProcessStep
+	public interface IProcessStep : IAgent
 	{
 		
 	}
@@ -11,6 +11,7 @@ namespace Cirrus.Core.Workflow.Processes
 		where TIn : class, IProcessInput
 		where TOut : class, IProcessOutput
 	{
+		//This should involve queuing up the command and returning early to continue later
 		Task<TOut> Execute(TIn arg);
 	}
 }

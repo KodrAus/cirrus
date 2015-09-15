@@ -2,13 +2,10 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+//TODO: Figure out if it's possible to infer some generic arguments in the case of the StrongProcess<> classes
 namespace Cirrus.Core.Workflow.Processes
 {
-	//TODO: Investigate ways of automating the loop through processes
-	//This code is currently very manual and clunky, but if it remains
-	//fairly untouched 'framework' code then we can probably get away with it
-
-	//TODO: Standardise repeat logic (error checks etc)
+	//Anonymous message-driven
 	public class Process<TIn, TOut> : IProcess, IProcessStep<TIn, TOut>
 		where TIn : class, IProcessInput
 		where TOut : class, IProcessOutput
@@ -54,6 +51,26 @@ namespace Cirrus.Core.Workflow.Processes
 		}
 	}
 
+	//Strongly-typed step-driven
+	public class StrongProcess<TStep, TIn, TOut> : Process<TIn, TOut>
+		where TStep : class, IProcessStep<TIn, TOut>
+		where TIn : class, IProcessInput
+		where TOut : class, IProcessOutput
+	{
+		public StrongProcess(TIn arg)
+			:base(arg)
+		{
+
+		}
+
+		public StrongProcess(TStep step)
+			:base(step)
+		{
+
+		}
+	}
+
+	//Anonymous message-driven
 	public class Process<TIn1, TOut1, TIn2, TOut2> : IProcess, IProcessStep<TIn1, TOut2>
 		where TIn1 : class, IProcessInput
 		where TOut1 : class, IProcessOutput
@@ -67,7 +84,7 @@ namespace Cirrus.Core.Workflow.Processes
 		}
 
 		public Process(IProcessStep<TIn1, TOut1> step1, IProcessStep<TIn2, TOut2> step2, Expression<Func<TOut1, TIn2>> thread1)
-			: this(null, thread1)
+			:this(null, thread1)
 		{
 			_step1 = step1;
 			_step2 = step2;
@@ -112,6 +129,29 @@ namespace Cirrus.Core.Workflow.Processes
 		}
 	}
 
+	//Strongly-typed step-driven
+	public class StrongProcess<TStep1, TIn1, TOut1, TStep2, TIn2, TOut2> : Process<TIn1, TOut1, TIn2, TOut2>
+		where TStep1 : class, IProcessStep<TIn1, TOut1>
+		where TIn1 : class, IProcessInput
+		where TOut1 : class, IProcessOutput
+		where TStep2 : class, IProcessStep<TIn2, TOut2>
+		where TIn2 : class, IProcessInput
+		where TOut2 : class, IProcessOutput
+	{
+		public StrongProcess(TIn1 arg, Expression<Func<TOut1, TIn2>> thread1)
+			:base(arg, thread1)
+		{
+
+		}
+
+		public StrongProcess(TStep1 step1, TStep2 step2, Expression<Func<TOut1, TIn2>> thread1)
+			:base(step1, step2, thread1)
+		{
+
+		}
+	}
+
+	//Anonymous message-driven
 	public class Process<TIn1, TOut1, TIn2, TOut2, TIn3, TOut3> : IProcess, IProcessStep<TIn1, TOut3>
 		where TIn1 : class, IProcessInput
 		where TOut1 : class, IProcessOutput
@@ -129,7 +169,7 @@ namespace Cirrus.Core.Workflow.Processes
 		}
 
 		public Process(IProcessStep<TIn1, TOut1> step1, IProcessStep<TIn2, TOut2> step2, IProcessStep<TIn3, TOut3> step3, Expression<Func<TOut1, TIn2>> thread1, Expression<Func<TOut2, TIn3>> thread2)
-			: this(null, thread1, thread2)
+			:this(null, thread1, thread2)
 		{
 			_step1 = step1;
 			_step2 = step2;
@@ -175,6 +215,31 @@ namespace Cirrus.Core.Workflow.Processes
 			}
 
 			return await Execute(_step1, _step2, _step3);
+		}
+	}
+
+	//Strongly-typed step-driven
+	public class StrongProcess<TStep1, TIn1, TOut1, TStep2, TIn2, TOut2, TStep3, TIn3, TOut3> : Process<TIn1, TOut1, TIn2, TOut2, TIn3, TOut3>
+		where TStep1 : class, IProcessStep<TIn1, TOut1>
+		where TIn1 : class, IProcessInput
+		where TOut1 : class, IProcessOutput
+		where TStep2 : class, IProcessStep<TIn2, TOut2>
+		where TIn2 : class, IProcessInput
+		where TOut2 : class, IProcessOutput
+		where TStep3 : class, IProcessStep<TIn3, TOut3>
+		where TIn3 : class, IProcessInput
+		where TOut3 : class, IProcessOutput
+	{
+		public StrongProcess(TIn1 arg, Expression<Func<TOut1, TIn2>> thread1, Expression<Func<TOut2, TIn3>> thread2)
+			:base(arg, thread1, thread2)
+		{
+
+		}
+
+		public StrongProcess(TStep1 step1, TStep2 step2, TStep3 step3, Expression<Func<TOut1, TIn2>> thread1, Expression<Func<TOut2, TIn3>> thread2)
+			:base(step1, step2, step3, thread1, thread2)
+		{
+
 		}
 	}
 }
