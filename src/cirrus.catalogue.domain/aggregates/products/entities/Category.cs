@@ -4,7 +4,7 @@ namespace Cirrus.Catalogue.Domain
 	{
 		public Category()
 		{
-
+			
 		}
 
 		public Category(string title)

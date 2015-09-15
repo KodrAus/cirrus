@@ -11,10 +11,6 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			{
 				return _summary;
 			}
-			set
-			{
-				_summary = value;
-			}
 		}
 		
 		public new string Description
@@ -23,10 +19,6 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			{
 				return _description;
 			}
-			set
-			{
-				_description = value;
-			}
 		}
 
 		public new IEnumerable<Category> Categories
@@ -34,10 +26,6 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			get
 			{
 				return _categories;
-			}
-			set
-			{
-				_categories = value;
 			}
 		}
 	}

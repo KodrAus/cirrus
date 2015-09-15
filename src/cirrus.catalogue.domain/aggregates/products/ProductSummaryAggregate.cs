@@ -10,10 +10,6 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			{
 				return _summary;
 			}
-			set
-			{
-				_summary = value;
-			}
 		}
 	}
 }
