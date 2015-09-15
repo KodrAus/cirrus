@@ -62,6 +62,8 @@ namespace Cirrus.Catalogue.Domain.Tests.Products
 		[Fact]
 		public void Has_Variants()
 		{
+			AggregateFactory.Configure();
+
 			var product = new ProductBuilder()
 				.WithVariants(
 					new Product(),
@@ -70,6 +72,21 @@ namespace Cirrus.Catalogue.Domain.Tests.Products
 				.AsAggregate<ProductVariantsAggregate>(new AggregateFactory());
 
 			Assert.Equal(product.Variants.Count(), 2);
+		}
+
+		[Fact]
+		public void Has_Categories()
+		{
+			AggregateFactory.Configure();
+
+			var product = new ProductBuilder()
+				.WithCategories(
+					new Category(),
+					new Category()
+				)
+				.AsAggregate<ProductDetailsAggregate>(new AggregateFactory());
+
+			Assert.Equal(product.Categories.Count(), 2);
 		}
 	}
 }

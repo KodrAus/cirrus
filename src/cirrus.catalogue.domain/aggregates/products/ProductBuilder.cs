@@ -39,6 +39,13 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			return this;
 		}
 
+		public ProductBuilder WithCategories(params Category[] categories)
+		{
+			_categories = categories;
+
+			return this;
+		}
+
 		public Product GetResult()
 		{
 			return this;

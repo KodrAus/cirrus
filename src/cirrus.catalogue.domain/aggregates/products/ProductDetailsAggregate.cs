@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cirrus.Catalogue.Domain.Aggregates.Products.Entities;
 
 namespace Cirrus.Catalogue.Domain.Aggregates.Products
@@ -25,6 +26,18 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products
 			set
 			{
 				_description = value;
+			}
+		}
+
+		public new IEnumerable<Category> Categories
+		{
+			get
+			{
+				return _categories;
+			}
+			set
+			{
+				_categories = value;
 			}
 		}
 	}

@@ -10,6 +10,7 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products.Entities
 		public Product()
 		{
 			_variants = new List<Product>();
+			_categories = new List<Category>();
 			_details = new ExpandoObject();
 		}
 
@@ -71,6 +72,16 @@ namespace Cirrus.Catalogue.Domain.Aggregates.Products.Entities
 			get
 			{
 				return _summary;
+			}
+		}
+
+		[JsonIgnore]
+		protected IEnumerable<Category> _categories;
+		protected IEnumerable<Category> Categories
+		{
+			get
+			{
+				return _categories;
 			}
 		}
 
