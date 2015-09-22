@@ -1,185 +1,99 @@
 using System;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
 using Cirrus.Core.Workflow.Processes;
-using Cirrus.Core.Workflow.Tests.ProcessFixtures;
 using Xunit;
 
 namespace Cirrus.Core.Workflow.Tests
 {
 	public class ProcessTests
 	{
-		[Fact]
-		public void IProcessStepInput_Takes_Generic_Argument()
+		//Verify that custom methods can be used in the expression
+		public int MyStepMethod(string input)
 		{
-			string inputValue = "my string";
-			var input = new TestProcessStepInput1(inputValue);
-
-			Assert.Equal(((ProcessInputBase<string>)input).Input, inputValue);
+			return Convert.ToInt32(input);
 		}
 
 		[Fact]
-		public async Task IProcessStepOutput_Takes_Generic_Argument()
+		public void Process_Takes_Steps_And_Executes()
 		{
-			string resultValue = "my string";
-			var output = new TestProcessStepOutput1(resultValue);
-
-			Assert.Equal(((ProcessOutputBase<string>)output).Result, resultValue);
-		}
-
-		[Fact]
-		public async Task Process_Takes_Generic_ProcessStep_IO_Args()
-		{
-			string input = "my input";
-			var process = new Process<TestProcessStepInput1, TestProcessStepOutput1>(new TestProcessStepInput1(input));
-			
-			var result = await process.ExecuteStep(new TestProcessStep1());
-
-			Assert.Equal(result.Result, input);
-		}
-
-		[Fact]
-		public async Task Process_Takes_Generic_ProcessStep()
-		{
-			string input = "my input";
-			var process = new StrongProcess<TestProcessStep1, TestProcessStepInput1, TestProcessStepOutput1>(new TestProcessStepInput1(input));
-
-			var result = await process.ExecuteStep(new TestProcessStep1());
-
-			Assert.Equal(result.Result, input);
-		}
-
-		[Fact]
-		public async Task Process_Returns_Unravelled_Process_As_Result()
-		{
-			var process = new Process<
-				TestProcessStepInput1, TestProcessStepOutput1, 
-				TestProcessStepInput2, TestProcessStepOutput2>
-			(
-				new TestProcessStepInput1("my input"),
-				
-				(out1) => new TestProcessStepInput2(out1.Result)
+			//Try create a process using a simple factory
+			var process = Process.New(
+				new Step<string, int>(input => MyStepMethod(input)),
+				new Step<int, int>(input => input + 1),
+				new Step<int, string>(input => input.ToString()),
+				new Step<string, string>(input => "result is: " + input)
 			);
 
-		    var result = await process.ExecuteStep(new TestProcessStep1());
+			var result = process.Execute("1");
 
-		    Assert.True(result is Process<TestProcessStepInput2, TestProcessStepOutput2>);
+			Assert.Equal("result is: 2", result);
 		}
 
 		[Fact]
-		public async Task Process_Executes_All_Steps()
+		public void Process_Takes_Process_As_Step_And_Executes()
 		{
-			var process = new Process<
-				TestProcessStepInput1, TestProcessStepOutput1, 
-				TestProcessStepInput2, TestProcessStepOutput2>
-			(
-				new TestProcessStepInput1("my input"),
-				
-				(out1) => new TestProcessStepInput2(out1.Result)
+			//Try to create a process that takes another process as a sub step
+			var process = Process.New(
+				new Step<string, int>(input => Convert.ToInt32(input)),
+				new Step<int, int>(input => input + 1),
+				Process.New(
+					new Step<int, string>(input => input.ToString() + " with extra bits")
+				),
+				new Step<string, string>(input => "result is: " + input)
 			);
 
-		    var result = await process.Execute(new TestProcessStep1(), new TestProcessStep2());
+			var result = process.Execute("1");
 
-		    Assert.True(result is TestProcessStepOutput2);
+			Assert.Equal("result is: 2 with extra bits", result);
 		}
 
 		[Fact]
-		public async Task Process_Can_Execute_Another_Process_As_A_Step()
+		public void Process_Returns_PartialResult_When_Computation_Is_Not_Complete()
 		{
-			var process = new Process
-			<
-				TestProcessStepInput1, TestProcessStepOutput1, 
-				TestProcessStepInput2, TestProcessStepOutput2,
-				TestProcessStepInput2, TestProcessStepOutput2
-			>
-			(
-				new TestProcessStepInput1("my input"),
-				
-				(out1) => new TestProcessStepInput2(out1.Result),
-				(out2) => new TestProcessStepInput2(out2.Result)
+			//Create a process that contains more than a single step
+			var process = Process.New(
+				new Step<int, int>(input => input + 1),
+				new Step<int, int>(input => input + 3)
 			);
 
-			//Needs to take constructor with steps
-			var subProcess = new Process<
-				TestProcessStepInput2, TestProcessStepOutput2, 
-				TestProcessStepInput2, TestProcessStepOutput2>
-			(
-				new TestProcessStep2(),
-				new TestProcessStep2(),
-				
-				(out1) => new TestProcessStepInput2(out1.Result)
-			);
+			var result = process.ExecuteStep(1);
 
-			var result = await process.Execute(new TestProcessStep1(), subProcess, new TestProcessStep2());
-
-			Assert.True(result is TestProcessStepOutput2);
+			Assert.NotNull(result.Process);
+			Assert.Equal(2, result.Result);
 		}
 
 		[Fact]
-		public async Task Process_Can_Execute_As_IProcessStep()
+		public void Process_Returns_Final_Result_When_Computation_Is_Complete()
 		{
-			IProcessStep<TestProcessStepInput1, TestProcessStepOutput2> process = new Process<
-				TestProcessStepInput1, TestProcessStepOutput1, 
-				TestProcessStepInput2, TestProcessStepOutput2>
-			(
-				new TestProcessStep1(),
-				new TestProcessStep2(),
-				
-				(out1) => new TestProcessStepInput2(out1.Result)
+			var process = Process.New(
+				new Step<int, int>(input => input + 1),
+				new Step<int, int>(input => input + 3)
 			);
 
-		    var result = await process.Execute(new TestProcessStepInput1("my input"));
+			var result = process.ExecuteStep(1);
 
-		    Assert.True(result is TestProcessStepOutput2);
+			//Run the rest of the computation, ensure there is no process left to run afterwards
+			result = result.ExecuteStep();
+
+			Assert.Null(result.Process);
 		}
 
 		[Fact]
-		public async Task Process_Throws_NullReferenceException_If_Step_Is_Not_Supplied_When_Running_As_IProcessStep()
+		public void Process_Throws_If_Input_Type_To_Step_Is_Not_Correct()
 		{
-			//Build a process without supplying any steps
-			//This means we can't execute as a step itself because there's no way to supply those arguments
-			IProcessStep<TestProcessStepInput1, TestProcessStepOutput2> process = new Process<
-				TestProcessStepInput1, TestProcessStepOutput1, 
-				TestProcessStepInput2, TestProcessStepOutput2>
-			(
-				new TestProcessStepInput1("my input"),
-				(out1) => new TestProcessStepInput2(out1.Result)
-			);
-
-			//Try to run the process without the steps necessary
 			bool failed = false;
+
+			var process = Process.New(
+				new Step<int, string>(input => input.ToString()),
+				new Step<int, string>(input => input.ToString())
+			);
+
 			try
 			{
-			    var result = await process.Execute(new TestProcessStepInput1("my input"));
+				process.Execute(1);
 			}
-			catch
-			{
-				failed = true;
-			}
-
-		    Assert.True(failed);
-		}
-
-		[Fact]
-		public async Task Process_Throws_NullReferenceException_If_Arg_Is_Not_Supplied_When_Running_As_Process()
-		{
-			var process = new Process
-			<
-				TestProcessStepInput1, TestProcessStepOutput1, 
-				TestProcessStepInput2, TestProcessStepOutput2
-			>
-			(
-				new TestProcessStep1(),
-				new TestProcessStep2(),
-				
-				(out1) => new TestProcessStepInput2(out1.Result)
-			);
-
-			bool failed = false;
-			try
-			{
-				var result = await process.ExecuteStep(new TestProcessStep1());
-			}
-			catch
+			catch (ArgumentException)
 			{
 				failed = true;
 			}
